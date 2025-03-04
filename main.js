@@ -29,8 +29,20 @@ function makeMap() {
         zoom: 14.5,
         minZoom: 11.5,
         maxBounds: bounds, // Restringe el área visible
-        maxBoundsViscosity: 1.0 // Mantiene al usuario dentro de los límites
+        maxBoundsViscosity: 1.0, // Mantiene al usuario dentro de los límites
+        scrollWheelZoom: false // Desactiva el zoom con el scroll del mouse
     });
+    
+    // Permitir el zoom con scroll solo cuando el usuario haga clic en el mapa
+    map.on('click', function () {
+        map.scrollWheelZoom.enable();
+    });
+    
+    // Opcional: deshabilitar nuevamente el zoom con scroll cuando el usuario haga scroll en la página
+    document.addEventListener('scroll', function () {
+        map.scrollWheelZoom.disable();
+    });
+    
 
     // PopUp con las instrucciones
     L.popup({
@@ -38,7 +50,7 @@ function makeMap() {
         autoPanPadding: L.point(10, 10)  // 10px de margen en todos los lados
     })
     .setLatLng(map.getBounds().getSouthEast())
-    .setContent('<div id="popUp"><h3 id="popupStart">Instrucciones<br >popup</h3><p>Clickeá en una institución educativa para saber más sobre sus necesidades</p></div>')
+    .setContent('<div id="popUp"><h4>Clickeá en una institución educativa para saber más sobre sus necesidades</h4></div>')
     .openOn(map);
 
     // Agregamos la imagen satelital

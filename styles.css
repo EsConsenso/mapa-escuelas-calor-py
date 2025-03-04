@@ -13,11 +13,12 @@
 
 body {
     padding: 20px;
-    margin: 10px;
+    margin: 0; /* Elimina margen global */
     font-family: var(--font-family-body);
     font-weight: var(--font-weight-body);
     font-size: calc(1rem + var(--font-size-body-offset));
 }
+
 
 p {
     margin: 10px 0;
@@ -57,7 +58,28 @@ h1, h2, h3, h4, h5, h6 {
     max-width: 100%; /* Permite que se haga más pequeña en móviles */
     height: auto; /* Mantiene la proporción */
 }
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto; /* Asegura que las imágenes queden centradas */
+}
   
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+td {
+    padding: 10px;
+    text-align: center;
+    font-size: 16px;
+    font-family: var(--font-family-body);
+    border: 1px solid #ddd; /* Borde sutil */
+}
+
 
 .boton {
     background-color: #0b3954; /* Cambia este color al que prefieras */
@@ -100,17 +122,36 @@ hr {
 #map { 
     height: 70vh;
     width: 100%;
+    max-width: 100%;
     border: 1px solid #ccc;
     border-radius: 8px;
 }
 
 @media (max-width: 768px) {
     #map {
-        width: 100vw !important; 
+        width: 95vw; /* Usa un poco menos que 100vw */
+        max-width: 100%;
         height: 80vh; 
+        margin: 0 auto; /* Centra el mapa */
         border-radius: 0;
     }
 }
+
+
+.contenido {
+    max-width: 900px; /* Ajusta según preferencia */
+    width: 90%; /* En móviles usa casi todo el ancho */
+    margin: 0 auto; /* Centra el contenido */
+}
+
+/* En pantallas grandes, aumenta el ancho máximo */
+@media (min-width: 1024px) {
+    .container {
+        max-width: 1000px;
+        width: 70%; /* Reduce el ancho relativo */
+    }
+}
+
 
 .leaflet-sidebar-pane.active .leaflet-sidebar-header {
     background-color: #0b3954;
