@@ -103,7 +103,7 @@ function configureMarkerInteraction(layer) {
         let beneficiarios = props[`beneficiarios${i}`];
 
         if (recurso && cantidad && beneficiarios) {
-            recursosArray.push(`<li><b>${recurso}</b>: ${cantidad} unidades (Beneficiarios: ${beneficiarios})</li>`);
+            recursosArray.push(`<li><b>${recurso}</b>. Cantidad: ${cantidad} (Beneficiarios: ${beneficiarios})</li>`);
         }
     }
 
