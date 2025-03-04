@@ -81,20 +81,40 @@ td {
 }
 
 
+.boton, .boton1 {
+    font-weight: bold; /* Hace el texto más legible */
+    padding: 12px 24px; /* Un poco más de padding para mejor apariencia */
+    font-size: 16px; 
+    border-radius: 8px; /* Bordes más suaves */
+    text-decoration: none; 
+    display: inline-block;
+    transition: all 0.3s ease-in-out; /* Suaviza los cambios */
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.15); /* Sombra sutil */
+}
+
+/* Botón azul */
 .boton {
-    background-color: #0b3954; /* Cambia este color al que prefieras */
-    color: white; /* Texto en blanco para contraste */
-    border: none; /* Quita el borde */
-    padding: 10px 20px; /* Espaciado interno */
-    font-size: 16px; /* Tamaño del texto */
-    border-radius: 5px; /* Bordes redondeados */
-    text-decoration: none; /* Evita el subrayado de los enlaces */
-    display: inline-block; /* Mantiene el tamaño correcto */
-    transition: background 0.3s ease-in-out; /* Suaviza el cambio de color */
+    background-color: #0b3954;
+    color: white;
+    border: 2px solid #0b3954; /* Agrega un borde sólido */
 }
 
 .boton:hover {
-    background-color: #082c43; /* Color más oscuro al pasar el cursor */
+    background-color: #082c43;
+    box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.25); /* Sombra más pronunciada al pasar el mouse */
+}
+
+/* Botón blanco con borde azul */
+.boton1 {
+    background-color: white;
+    color: #0b3954;
+    border: 2px solid #0b3954; 
+}
+
+.boton1:hover {
+    background-color: #0b3954;
+    color: white;
+    box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.25);
 }
 
 .logo {
