@@ -1,0 +1,163 @@
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+
+/* Importar la fuente Lora desde Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap');
+
+:root {
+    --font-family-headings: "Lora", serif;
+    --font-weight-headings: 900;
+    --font-family-body: "Lora", serif;
+    --font-weight-body: 400;
+    --font-size-body-offset: 1px;
+}
+
+body {
+    padding: 20px;
+    margin: 10px;
+    font-family: var(--font-family-body);
+    font-weight: var(--font-weight-body);
+    font-size: calc(1rem + var(--font-size-body-offset));
+}
+
+p {
+    margin: 10px 0;
+    padding: 5px;
+    font-family: var(--font-family-body);
+    font-weight: var(--font-weight-body);
+    font-size: calc(1rem + var(--font-size-body-offset));
+    color: rgb(54, 55, 55);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 15px 0;
+    padding: 5px;
+    font-family: var(--font-family-headings);
+    font-weight: var(--font-weight-headings);
+    color: rgb(54, 55, 55);
+}
+
+#bajada {
+    font-family: var(--font-family-headings);
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 24px;
+    color: rgb(134, 135, 135);
+}
+
+#creditos {
+    font-family: var(--font-family-headings);
+    font-weight: 700;
+    font-size: 24.75px;
+    line-height: 28.71px;
+    color: rgb(54, 55, 55);
+}
+
+.responsive-img {
+    width: 600px; /* Tamaño por defecto */
+    max-width: 100%; /* Permite que se haga más pequeña en móviles */
+    height: auto; /* Mantiene la proporción */
+}
+  
+
+.boton {
+    background-color: #0b3954; /* Cambia este color al que prefieras */
+    color: white; /* Texto en blanco para contraste */
+    border: none; /* Quita el borde */
+    padding: 10px 20px; /* Espaciado interno */
+    font-size: 16px; /* Tamaño del texto */
+    border-radius: 5px; /* Bordes redondeados */
+    text-decoration: none; /* Evita el subrayado de los enlaces */
+    display: inline-block; /* Mantiene el tamaño correcto */
+    transition: background 0.3s ease-in-out; /* Suaviza el cambio de color */
+}
+
+.boton:hover {
+    background-color: #082c43; /* Color más oscuro al pasar el cursor */
+}
+
+.logo {
+    text-align: center;
+}
+
+hr {
+    color:#ccc;
+}
+
+#subtitulo {
+    color: #4A4A4A;
+}
+
+.custom-div-icon i {
+    font-size: 2rem;  
+    color: #0b3954;  
+    background-color: white;  
+    padding: 10px;  
+    border-radius: 50%;  
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+#map { 
+    height: 70vh;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+    #map {
+        width: 100vw !important; 
+        height: 80vh; 
+        border-radius: 0;
+    }
+}
+
+.leaflet-sidebar-pane.active .leaflet-sidebar-header {
+    background-color: #0b3954;
+    color: #fff;
+}
+
+/* !!!!!!!! ICONS */
+.tabs i {
+    transition: background-color 0.3s, color 0.3s, transform 0.2s;
+    font-size: 24px; 
+}
+
+.leaflet-sidebar-tabs > li,
+.leaflet-sidebar-tabs > ul > li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px; 
+    height: 40px;
+}
+
+.leaflet-sidebar-tabs > li i {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.leaflet-sidebar-tabs > li.active,
+.leaflet-sidebar-tabs > ul > li.active {
+    background-color: #0b3954 !important; 
+    color: #fff !important; 
+}
+
+.leaflet-sidebar-tabs > li.active i {
+    background-color: #0b3954 !important;
+    color: #fff !important;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+@media (max-width: 768px) {
+    .leaflet-sidebar {
+        max-width: 50vw !important;
+        transition: transform 0.3s ease-in-out; 
+    }
+}
