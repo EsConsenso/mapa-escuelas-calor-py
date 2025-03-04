@@ -42,7 +42,7 @@ function makeMap() {
     .openOn(map);
 
     // Agregamos la imagen satelital
-    let imageUrl = 'https://tania-karo.github.io/pilot2-mapa-calor-asu/imagenes/mapa-calor-asu.png';
+    let imageUrl = 'https://esconsenso.github.io/mapa-escuelas-calor-py/imagenes/mapa-calor-asu.png';
     let imageLayer = L.imageOverlay(imageUrl, imageBounds, { opacity: 0.7 });
     imageLayer.addTo(map);
 }
@@ -119,7 +119,7 @@ function configureMarkerInteraction(layer) {
 
 
 function addGeoJSON() {
-    let geojsonUrl = 'HOJA2.geojson'; //! Cambiar por la URL del archivo GeoJSON
+    let geojsonUrl = 'https://raw.githubusercontent.com/EsConsenso/mapa-escuelas-calor-py/refs/heads/main/HOJA2.geojson'; //! Cambiar por la URL del archivo GeoJSON
 
     if (markersLayer) {
         map.removeLayer(markersLayer);
