@@ -50,7 +50,7 @@ function makeMap() {
         autoPanPadding: L.point(10, 10)  // 10px de margen en todos los lados
     })
     .setLatLng(map.getBounds().getSouthEast())
-    .setContent('<div id="popUp"><h4>Clickeá en una institución educativa para saber más sobre sus necesidades</h4></div>')
+    .setContent('<div id="popUp"><h6>Clickeá en una <br>institución educativa <br>para saber sobre <br>sus necesidades</h6></div>')
     .openOn(map);
 
     // Agregamos la imagen satelital
