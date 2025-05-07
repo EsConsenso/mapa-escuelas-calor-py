@@ -17,20 +17,49 @@
 */
 
 // Variables globales
-let map, sidebar, markersLayer;
+let map, sidebar;
+let escuelasLayer = null; // Aca vamos a guardar la capa de escuelas
+let estacionesLayer = null; // Aca vamos a guardar la capa de estaciones
 
+let geojsonUrlescuelas = 'https://esconsenso.github.io/mapa-escuelas-calor-py/HOJA2.geojson'; 
+let geojsonUrlestaciones = 'estaciones-hakusito.geojson'; // CAMBIAR POR https://esconsenso.github.io/mapa-escuelas-calor-py/estaciones-hakusito.geojson' AL SUBIR AL REPO
+
+// Espera a que cargue el DOM
 document.addEventListener("DOMContentLoaded", function () {
-    init(); // Llama a las funciones que deben ejecutarse al cargar la página
+    init();
 });
 
+// Botones para alternar vista
+document.getElementById("btn-estaciones").addEventListener("click", function () {
+    clearLayers();
+    loadMapaEstaciones();
+});
+
+document.getElementById("btn-escuelas").addEventListener("click", function () {
+    clearLayers();
+    loadMapaEscuelas();
+});
+
+// Se llama solo una vez al cargar
 function init() {
-    makeMap();          // Inicializa el mapa y agrega la imagen satelital
-    addTileLayer();     // Agrega la capa de OpenStreetMap
-    addSidebar();       // Agrega el panel lateral
-    addGeoJSON();       // Agrega la capa de escuelas
-    addPinSearch();     // Agrega la barra de búsqueda
+    makeMap();          // 1. Inicializa el mapa con la imagen satelital
+    addTileLayer();     // 2. Agrega OSM
+    addSidebar();       // 3. Sidebar
+    addGeoJSON(geojsonUrlescuelas, "escuelas");
+    addPinSearch();
+
+        // Popup específico para las escuelas
+        let popupescuelas = L.popup({
+            autoPan: true,
+            autoPanPadding: L.point(10, 10)
+        })
+        .setLatLng(map.getBounds().getSouthEast())
+        .setContent('<div id="popUp"><h6>Clickeá en una <br>institución educativa <br>para saber sobre <br>sus necesidades</h6></div>')
+        .openOn(map);
+    
 }
 
+// Función para crear el mapa base (solo si no existe)
 function makeMap() {
     let lowerLeft = [-25.70095, -57.83323];
     let upperRight = [-24.8821, -57.14187];
@@ -50,26 +79,16 @@ function makeMap() {
         maxBoundsViscosity: 1.0, // Mantiene al usuario dentro de los límites
         scrollWheelZoom: false // Desactiva el zoom con el scroll del mouse
     });
-    
+
     // Permitir el zoom con scroll solo cuando el usuario haga clic en el mapa
     map.on('click', function () {
         map.scrollWheelZoom.enable();
     });
-    
+
     // Opcional: deshabilitar nuevamente el zoom con scroll cuando el usuario haga scroll en la página
     document.addEventListener('scroll', function () {
         map.scrollWheelZoom.disable();
     });
-    
-
-    // PopUp con las instrucciones
-    L.popup({
-        autoPan: true,
-        autoPanPadding: L.point(10, 10)  // 10px de margen en todos los lados
-    })
-    .setLatLng(map.getBounds().getSouthEast())
-    .setContent('<div id="popUp"><h6>Clickeá en una <br>institución educativa <br>para saber sobre <br>sus necesidades</h6></div>')
-    .openOn(map);
 
     // Agregamos la imagen satelital
     let imageUrl = 'https://esconsenso.github.io/mapa-escuelas-calor-py/imagenes/mapa-calor-asu.png';
@@ -77,6 +96,7 @@ function makeMap() {
     imageLayer.addTo(map);
 }
 
+// Función para agregar la capa de OpenStreetMap
 function addTileLayer() {
     let tileOSM = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
@@ -88,116 +108,193 @@ function addTileLayer() {
     });
 }
 
-/*
-function configureMarkerInteraction(layer) {
-    let name = layer.feature.properties?.Nombre || "Sin nombre";
+// Carga mapa con escuelas
+function loadMapaEscuelas() {
+    addGeoJSON(geojsonUrlescuelas, "escuelas"); // 4. Carga escuelas
 
-    layer.bindPopup(name);
-
-    layer.on('click', function () {
-        document.getElementById("escuelaName").innerHTML = `Local Educativo Seleccionado`;
-        document.getElementById("escuelaContent").innerHTML = `<div><p>Nombre: <b>${name}</b></p></div>`;
-        sidebar.open('escuelas');
-
-        let latlng = layer.getLatLng();
-        let offsetLng = -0.0015 / 3; // Ajusta este valor según el nivel de zoom para moverlo 400px
-
-        map.setView([latlng.lat, latlng.lng + offsetLng], 18, { animate: true });
-    });
+    // Popup específico para las escuelas
+    let popupescuelas = L.popup({
+        autoPan: true,
+        autoPanPadding: L.point(10, 10)
+    })
+    .setLatLng(map.getBounds().getSouthEast())
+    .setContent('<div id="popUp"><h6>Clickeá en una <br>institución educativa <br>para saber sobre <br>sus necesidades</h6></div>')
+    .openOn(map);
 }
-*/
 
-function configureMarkerInteraction(layer) {
-    let props = layer.feature.properties;
-    let name = props?.Nombre || "Sin nombre";
-    let departamento = props?.Departamento || "Desconocido";
-    let distrito = props?.Distrito || "Desconocido";
+// Carga mapa con estaciones
+function loadMapaEstaciones() {
+    addGeoJSON(geojsonUrlestaciones, "estaciones"); // 4. Carga estaciones
 
-    // Construcción eficiente de la lista de recursos
-    let recursosArray = [];
-    for (let i = 1; i <= 10; i++) {
-        let recurso = props[`R${i}`];
-        let cantidad = props[`cantidad${i}`];
-        let beneficiarios = props[`beneficiarios${i}`];
-
-        if (recurso && cantidad && beneficiarios) {
-            recursosArray.push(`<li><b>${recurso}</b>. Cantidad: ${cantidad} (Beneficiarios: ${beneficiarios})</li>`);
-        }
-    }
-
-    let contenido = `
-        <div>
-            <p><b>Nombre:</b> ${name}</p>
-            <p><b>Ubicación:</b> ${departamento}, ${distrito}</p>
-            <p><b>Recursos Necesarios:</b></p>
-            <ul>${recursosArray.length > 0 ? recursosArray.join("") : "<li>No hay recursos registrados</li>"}</ul>
-        </div>`;
-
-    // Solo actualizar el DOM si el contenido cambió
-    let sidebarContent = document.getElementById("escuelaContent");
-    if (sidebarContent.innerHTML !== contenido) {
-        document.getElementById("escuelaName").textContent = `Escuela Seleccionada`;
-        sidebarContent.innerHTML = contenido;
-    }
-
-    sidebar.open('escuelas');
-
-    let latlng = layer.getLatLng();
-    let offsetLng = -0.0015 / 3;
-    map.setView([latlng.lat, latlng.lng + offsetLng], 18, { animate: true });
+    // Popup específico para las estaciones
+    let popupestaciones = L.popup({
+        autoPan: true,
+        autoPanPadding: L.point(10, 10)
+    })
+    .setLatLng(map.getBounds().getSouthEast())
+    .setContent('<div id="popUp"><h6>Clickeá en una <br>estación de servicio <br>para conocer sus <br>características y ubicación</h6></div>')
+    .openOn(map);
 }
 
 
-function addGeoJSON() {
-    let geojsonUrl = 'https://raw.githubusercontent.com/EsConsenso/mapa-escuelas-calor-py/refs/heads/main/HOJA2.geojson'; //! Cambiar por la URL del archivo GeoJSON
+// Función para agregar GeoJSON
+function addGeoJSON(geojsonUrl, tipo = "escuelas") {
+    let targetLayer = (tipo === "escuelas") ? escuelasLayer : estacionesLayer;
 
-    if (markersLayer) {
-        map.removeLayer(markersLayer);
+    if (targetLayer) {
+        map.removeLayer(targetLayer);
     }
+
     fetch(geojsonUrl)
         .then(response => {
-            if (!response.ok) {
-                throw new Error(`Error fetching GeoJSON: ${response.status}`);
-            }
+            if (!response.ok) throw new Error(`Error cargando ${tipo}: ${response.status}`);
             return response.json();
         })
         .then(data => {
-            markersLayer = L.geoJSON(data, {
+            let newLayer = L.geoJSON(data, {
                 pointToLayer: (feature, latlng) => {
-                    let name = feature.properties?.Nombre || "Sin nombre";
-                    return L.marker(latlng, { icon: createIcon(map.getZoom()), title: name });
+                    let name = feature.properties?.Nombre || feature.properties?.nombre || "Sin nombre";
+                    return L.marker(latlng, {
+                        icon: createIcon(map.getZoom(), tipo),
+                        title: name
+                    });
                 },
                 onEachFeature: (feature, layer) => {
-                    layer.on("click", function () {
-                        configureMarkerInteraction(layer);
-                    });
+                    layer.on("click", () => configureMarkerInteraction(layer, tipo));
                 }
             }).addTo(map);
 
-            map.on('zoomend', function () {
+            if (tipo === "escuelas") {
+                escuelasLayer = newLayer;
+            } else {
+                estacionesLayer = newLayer;
+            }
+
+            map.on("zoomend", function () {
                 let newZoom = map.getZoom();
-                markersLayer.eachLayer(layer => {
+                newLayer.eachLayer(layer => {
                     if (layer instanceof L.Marker) {
-                        layer.setIcon(createIcon(newZoom));
+                        layer.setIcon(createIcon(newZoom, tipo));
                     }
                 });
             });
         })
         .catch(error => {
-            console.error('Error cargando GeoJSON:', error);
-            alert("No se pudieron cargar los datos de las escuelas. Por favor, inténtalo de nuevo más tarde.");
+            console.error(`Error cargando datos de ${tipo}:`, error);
+            alert(`No se pudieron cargar los datos de ${tipo}.`);
         });
 }
 
-function createIcon(zoom) {
-    let size = Math.max(10, zoom * 1.5); // Ajusta el tamaño dinámicamente, mínimo 10px
+let marcadorSeleccionado = null;
+
+// Función para configurar la interacción con los marcadores
+function configureMarkerInteraction(layer, tipo) {
+    let props = layer.feature.properties;
+    let contenido = "";
+
+    if (tipo === "escuelas") {
+        let name = props?.Nombre || "Sin nombre";
+        let departamento = props?.Departamento || "Desconocido";
+        let distrito = props?.Distrito || "Desconocido";
+        let riesgoCalor = props?.scale || "Sin datos";
+        let colorCalor = props?.color || "Sin datos";
+
+        let recursosArray = [];
+        for (let i = 1; i <= 10; i++) {
+            let recurso = props[`R${i}`];
+            let cantidad = props[`cantidad${i}`];
+            let beneficiarios = props[`beneficiarios${i}`];
+            
+            if (recurso && cantidad && beneficiarios) {
+                recursosArray.push(`<li><b>${recurso}</b>. Cantidad: ${cantidad} (Beneficiarios: ${beneficiarios})</li>`);
+            }
+        }
+
+        contenido = `
+            <div>
+                <p style="font-family: 'Fira Code', monospace;"><b>Nombre:</b> ${name}</p>
+                <p style="font-family: 'Fira Code', monospace;"><b>Ubicación:</b> ${departamento}, ${distrito}</p>
+                <p style="font-family: 'Fira Code', monospace; background-color: ${colorCalor};"><b>Riesgo de calor:</b> ${riesgoCalor}</p>
+                <p style="font-family: 'Fira Code', monospace;"><b>Recursos Necesarios:</b></p>
+                <ul style="font-family: 'Fira Code', monospace;">${recursosArray.length > 0 ? recursosArray.join("") : "<li>No hay recursos registrados</li>"}</ul>
+            </div>`;
+
+        document.getElementById("escuelaName").textContent = "Escuela Seleccionada";
+        document.getElementById("escuelaContent").innerHTML = contenido;
+        sidebar.open("escuelas");
+
+        // Marcar ícono seleccionado
+        if (marcadorSeleccionado && marcadorSeleccionado._icon) {
+            marcadorSeleccionado._icon.classList.remove("selected");
+        }
+        if (layer._icon) {
+            layer._icon.classList.add("selected");
+            marcadorSeleccionado = layer;
+        }
+    }
+
+    else if (tipo === "estaciones") {
+        let distribuidor = props?.distribuidor || "Sin datos";
+        let direccion = props?.direccion || "Sin dirección";
+        let riesgoCalor = props?.scale || "Sin datos";
+        let colorCalor = props?.color || "Sin datos";
+        
+        contenido = `
+            <div>
+                <p style="font-family: 'Fira Code', monospace;"><b>Distribuidor:</b> ${distribuidor}</p>
+                <p style="font-family: 'Fira Code', monospace;"><b>Dirección:</b> ${direccion}</p>
+                <p style="font-family: 'Fira Code', monospace; background-color: ${colorCalor};"><b>Riesgo de calor:</b> ${riesgoCalor}</p>
+            </div>`;
+
+        document.getElementById("estacionContent").innerHTML = contenido;
+        document.getElementById("estacionName").textContent = "Estación Seleccionada";
+        sidebar.open("estaciones");
+
+        // Marcar ícono seleccionado
+        if (marcadorSeleccionado && marcadorSeleccionado._icon) {
+            marcadorSeleccionado._icon.classList.remove("selected");
+        }
+        if (layer._icon) {
+            layer._icon.classList.add("selected");
+            marcadorSeleccionado = layer;
+        }
+    }
+
+    // Centrar el mapa
+    let latlng = layer.getLatLng();
+    map.setView([latlng.lat, latlng.lng - 0.001], 18, { animate: true });
+}
+
+// Función para crear el ícono personalizado
+function createIcon(zoom, tipo) {
+    let size = Math.max(10, zoom * 1.5);
+    let iconHtml = "";
+
+    if (tipo === "escuelas") {
+        iconHtml = `<i class="bi bi-mortarboard" style="font-size: ${size}px; color: #0b3954;"></i>`;
+    } else if (tipo === "estaciones") {
+        iconHtml = `<i class="bi bi-fuel-pump" style="font-size: ${size}px; color: #0b3954;"></i>`;
+    }
+
     return L.divIcon({
         className: "custom-div-icon",
-        html: `<i class="bi bi-mortarboard" style="font-size: ${size}px; color: #0b3954;"></i>`,
+        html: iconHtml,
         iconSize: [size, size],
         iconAnchor: [size / 2, size / 2],
-        popupAnchor: [size / 2, -size / 2]
+        popupAnchor: [0, -size / 2]
     });
+}
+
+// Limpia capas anteriores del mapa
+function clearLayers() {
+    if (escuelasLayer) {
+        map.removeLayer(escuelasLayer);
+        escuelasLayer = null;
+    }
+    if (estacionesLayer) {
+        map.removeLayer(estacionesLayer);
+        estacionesLayer = null;
+    }
 }
 
 function addSidebar() {

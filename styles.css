@@ -21,12 +21,19 @@
 /* Importar la fuente Lora desde Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code&display=swap');
+
+
 :root {
     --font-family-headings: "Lora", serif;
     --font-weight-headings: 900;
     --font-family-body: "Lora", serif;
     --font-weight-body: 400;
     --font-size-body-offset: 1px;
+}
+
+.robot {
+    font-family: 'Fira Code', monospace !important;
 }
 
 body {
@@ -91,9 +98,9 @@ table {
 
 td {
     padding: 10px;
-    text-align: center;
+    text-align: left;
     font-size: 16px;
-    font-family: var(--font-family-body);
+    font-family:'Fira Code', monospace;
     border: 1px solid #ddd; /* Borde sutil */
 }
 
@@ -153,6 +160,11 @@ hr {
     border-radius: 50%;  
     border: 1px solid rgba(0, 0, 0, 0.3);
     box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.custom-div-icon.selected i {
+    background-color: #0b3954;
+    color: white !important;
 }
 
 #map { 
