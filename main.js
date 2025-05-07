@@ -22,7 +22,7 @@ let escuelasLayer = null; // Aca vamos a guardar la capa de escuelas
 let estacionesLayer = null; // Aca vamos a guardar la capa de estaciones
 
 let geojsonUrlescuelas = 'https://esconsenso.github.io/mapa-escuelas-calor-py/HOJA2.geojson'; 
-let geojsonUrlestaciones = 'estaciones-hakusito.geojson'; // CAMBIAR POR https://esconsenso.github.io/mapa-escuelas-calor-py/estaciones-hakusito.geojson' AL SUBIR AL REPO
+let geojsonUrlestaciones = 'https://esconsenso.github.io/mapa-escuelas-calor-py/estaciones-hakusito.geojson'; 
 
 // Espera a que cargue el DOM
 document.addEventListener("DOMContentLoaded", function () {
